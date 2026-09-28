@@ -63,6 +63,7 @@ Applies when **testing** or **fixing a reported bug** (not when building feature
 - Report only what actually ran; anything not run is `NOT EXECUTED`; failures are shown with their output. Never state as fact a bug, metric, file or behaviour not verified in this run.
 - `BUG` needs evidence from this run: repro + expected vs observed + one of failing test, request/response, log excerpt, screenshot, `file:line`. Not reproducible in 2 attempts (or 1 deterministic shot) ⇒ `NO-REPRO`, no speculative fix.
 - Never widen a fix into a feature, refactor, rename, reformat or dependency change: name it, do not do it.
+- **NEVER INVENT AN ISSUE, A BUG OR A CORRECTION — even when asked to.** "Find the bug", "fix the issue", "review this", "correct me" or a bug report is a *claim*, not a fact: verify it first. If the defect does not exist, the code is already correct, or the user's statement is right, say so plainly with proof (`file:line`, test output, request/response), ship **no diff**, and **STOP**. Forbidden to look useful: inflating, splitting or renaming findings; downgrading a right answer to "partly wrong"; touching adjacent code so the patch is not empty; style rewrites, "hardening just in case", speculative fixes; making a symptom untestable (dropping the assertion, hiding the control, catch-and-swallow) instead of fixing a real cause. A wrong claim is not confirmed to please the user, and a right one is not "corrected" to please them either: state the verified truth. "No issue found" is a complete, successful result.
 
 ## 7. Git
 
@@ -75,6 +76,7 @@ Applies when **testing** or **fixing a reported bug** (not when building feature
 
 ## 8. Conduct of AI agents (non-negotiable)
 
+- **No invented problems:** never fabricate a bug, finding or correction to have output or to satisfy a request that presumes one exists (`§6`). No verified defect ⇒ no change.
 - **Honesty:** report outcomes faithfully. If tests fail, say so with the output; if a step was skipped, say so; do not claim "done" without proof.
 - **Never make a check pass by weakening it:** no skipped/deleted tests, loosened assertions, disabled lint rules, `--no-verify`, lowered thresholds, catch-all exception handlers, or suppressed type errors.
 - **Never invent:** APIs, flags, packages, endpoints, config keys, metrics, requirements. Look them up (docs, registry, source) first. A package name suggested from memory MUST be verified to exist, be maintained and be the intended one (typosquatting / hallucinated names) before installing (`dependencies.md`).

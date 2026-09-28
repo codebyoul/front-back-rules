@@ -52,7 +52,8 @@ Derived state is computed, not synchronized by effects. Do not use effect hooks/
 - Dialog forms are keyed by entity so they remount with fresh defaults; closing resets form and submit state.
 - Full-form edits send back their `version`; a 409 keeps the form open with every typed value and a clear "changed by someone else — reload" message (never a toast that loses work).
 - Long forms, error summaries, sticky action bar, unsaved-changes guard: `ux.md` §5.
-- **Public forms** carry every abuse protection required by `security.md` §9 through one shared wrapper (challenge widget with visible status, image captcha with refresh where required, honeypot); on a "renew challenge" error the client silently fetches a new one and retries once; after a failed submit refresh the captcha and clear its field.
+- **Public forms** carry BOTH protections of `security.md` §9 through one shared wrapper: the ALTCHA widget (self-hosted, status always visible: verifying / verified / failed) and the Amazon-style image captcha with a refresh button and an accessible alternative, plus the honeypot; submit is disabled until ALTCHA is ready (or while pending). Submission goes through one helper that attaches the payloads; on a "renew challenge" error it fetches a new challenge and retries once silently; after any failed submit the captcha image is refreshed and its field cleared.
+- **Login form:** ALTCHA always; the image captcha appears **only when the server says `captcha_required`** (response of a failed login, or the status check on page load). The client never counts failures or stores the counter anywhere: after F5 or a new tab it asks the server again, and the requirement persists.
 
 ## 6. Error handling — one table, no ad-hoc handling
 

@@ -36,6 +36,8 @@ Enforced by tests, not by review: strict typing declared, no debug helpers (`dd`
 Where state is shared (rate limits, single-use tokens, webhook event ids, payment recording, quota counters, stock/balance changes): fire two parallel requests; exactly one wins; the loser gets a deterministic error, never a 500.
 
 ### Security tests
+- **Bot protection (every public form):** missing/invalid ALTCHA → 422; replayed ALTCHA → 422; missing/wrong image captcha → 422; replayed captcha → 422; filled honeypot → 422; a bot signal returns the generic message.
+- **Login adaptive captcha:** below N failures no image is required; at N the image is required and a request without it is refused even if the field is omitted; a wrong captcha counts as a failure; **the requirement survives a reload, a fresh client with no cookies/session, and a new session for the same identifier+IP**; a nonexistent identifier increments the counter and yields identical responses; success resets it; the window expiry resets it; ALTCHA stays required throughout.
 Rate limits, lockout, session fixation/regeneration, password-reset and login same-response (anti-enumeration: status, body shape, timing class, emails sent), security headers, upload validation, webhook signature rejection, SSRF blocklist.
 
 ## 3. Frontend tests
