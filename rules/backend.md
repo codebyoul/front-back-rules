@@ -85,9 +85,9 @@ Tags: **[multi-tenant]** applies only to multi-tenant products (drop otherwise).
 - Every table is either immutable-business (payments, invoices, audit) or has a retention purge job; logs are never kept forever by accident.
 - Idempotent retries never double-charge, double-bill or double-send.
 
-## 7. Time
+## 7. Time — UTC only (NON-NEGOTIABLE)
 
-- **Store UTC everywhere.** App zone and DB session zone are UTC and never changed at runtime; the DB never converts zones; a user's local date/time is converted to UTC **before** storing. Calendar-only values (billing day, payment date) are `date`, never zone-converted.
+- **Every time in every database is UTC, never another time zone** (all tables, logs, queues, sessions, cache, backups, exports). App zone, runtime zone, scheduler zone and DB session zone are UTC and never changed at runtime; API timestamps are ISO-8601 with `Z`; no per-value time-zone or offset column is stored to interpret a timestamp (the tenant/user display zone is a setting applied only at display). No exception, no "local time for this one table". The DB never converts zones; a user's local date/time is converted to UTC **before** storing. Calendar-only values (billing day, payment date) are `date`, never zone-converted.
 - Convert to the tenant/user zone (IANA, validated) only at display or when computing a calendar day (server) / `Intl` (client).
 - **The server owns "now":** decisions derived from time ("late", "expired", "billed today", "grace ends") are computed server-side and returned as fields; the client never decides them from its clock. Calendar-day caps ("per day") use the tenant zone.
 - A test asserts app zone, runtime zone and DB session zone are UTC and that no SQL converts zones.

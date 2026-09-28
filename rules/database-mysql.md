@@ -7,14 +7,14 @@ Read with `backend.md` §4 §6 §7, `security.md` §14, `performance.md` §3. Ev
 
 - InnoDB only. Character set `utf8mb4` (never `utf8`/`utf8mb3`, which is 3-byte and drops emoji/some scripts); set the connection charset/collation explicitly.
 - **Strict SQL mode always on** (`STRICT_TRANS_TABLES` or stricter, `ONLY_FULL_GROUP_BY`, `NO_ZERO_DATE`, `NO_ZERO_IN_DATE`, `ERROR_FOR_DIVISION_BY_ZERO`); never disabled to "make an import work". Silent truncation and zero-dates are data corruption.
-- Connection session time zone = `'+00:00'` (an offset, not a named zone: named zones need tz tables that shared hosts may lack). The DB never converts zones (`CONVERT_TZ`, `SET time_zone` in queries are forbidden); the app writes UTC.
+- **UTC only (NON-NEGOTIABLE, `backend.md` §7):** connection session time zone = `'+00:00'` on every connection (an offset, not a named zone: named zones need tz tables that shared hosts may lack); set the server's `default_time_zone = '+00:00'` where the host allows it. The DB never converts zones (`CONVERT_TZ`, `SET time_zone` in queries are forbidden); the app writes UTC.
 - TLS required between app and DB (`require_secure_transport`); no anonymous or remote-root accounts; `local_infile` off; application role has DML only (`security.md` §14); a separate role runs migrations.
 - Connection limits and pooling sized from measured concurrency; `max_allowed_packet`, `wait_timeout` set deliberately; long-lived connections handle reconnect.
 
 ## 2. Types and schema
 
 - **Money:** `DECIMAL(p,s)` (e.g. `DECIMAL(12,2)`) + a currency code column; never `FLOAT`/`DOUBLE`.
-- **Time:** store UTC. Prefer `DATETIME(6)` (or `TIMESTAMP(6)` knowing it ends in 2038 and converts by session zone); calendar-only values use `DATE`. Default/`ON UPDATE CURRENT_TIMESTAMP` follow the UTC session.
+- **Time: UTC only, never a local zone.** Prefer `DATETIME(6)` (or `TIMESTAMP(6)` knowing it ends in 2038 and converts by session zone); calendar-only values use `DATE`. Default/`ON UPDATE CURRENT_TIMESTAMP` follow the UTC session.
 - **Booleans** `TINYINT(1)`/`BOOLEAN` NOT NULL with a default; **enums** as constrained `VARCHAR`/`TINYINT` + `CHECK` (MySQL 8.0.16+ enforces CHECK) or a lookup table — avoid native `ENUM` (reordering/adding is a table alteration, ordinal comparisons surprise).
 - **Strings:** bounded `VARCHAR(n)` sized to the domain; `TEXT`/`BLOB` only when needed and never in hot filtered columns. **JSON** columns for genuinely schemaless payloads only; index JSON via generated columns; never store relational data in JSON.
 - **NOT NULL by default**; NULL only when "unknown/not applicable" is a real state. Defaults are explicit.
