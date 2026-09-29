@@ -3,6 +3,15 @@
 Generic vocabulary: *server-state cache library* (TanStack Query, SWR, Apollo, RTK Query…), *form library*, *schema validator* (zod, valibot, yup…), *component kit* (design-system components you own), *router*.
 Security: `security.md` (§4, §5). Performance: `performance.md` §4. States/feedback/navigation/forms UX: `ux.md`. Tests: `testing.md` §3.
 
+## 0. Premium UI standard (NON-NEGOTIABLE — before ANY frontend change, however small)
+
+- Every component, page and element (tiny or large) is production-grade and premium, at the level of a top-tier SaaS. Never basic, generic, placeholder-looking or low-effort.
+- Small components get the same design care as major pages.
+- Strong hierarchy, spacing, typography, alignment, responsiveness, accessibility.
+- Every applicable state is designed: hover, focus, active, loading, empty, error, disabled, success.
+- One cohesive system via kit + tokens; nothing designed in isolation.
+- Before done, visually review; fix anything unfinished, inconsistent or generic.
+
 ## 1. Stack discipline
 
 - One UI framework, used as designed: never alias/shim/replace it (e.g. a compat layer) and never swap or drop a framework dependency to chase a metric; improve performance inside the framework (splitting, laziness, fewer deps).
