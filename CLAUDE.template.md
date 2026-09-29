@@ -35,3 +35,5 @@ Optional (load only if the product has it): @docs/rules/integrations.md, @docs/r
 Answer explicitly, in the commit body: **Security?** **Performance?** (and **Responsive/Accessible?** for UI). See `workflow.md` §1.
 
 **UI changes, however small:** apply `frontend.md` §0 (premium, production-grade, all states, cohesive, visually reviewed) first.
+
+**Test blocked by a DEV lockout/cooldown/limit:** apply `testing.md` §0; never wait.

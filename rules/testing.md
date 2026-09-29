@@ -1,5 +1,12 @@
 # Testing rules
 
+## 0. Test blockers (NON-NEGOTIABLE)
+
+- Never wait out DEV lockouts, cooldowns, rate limits, retries, expiries or schedules.
+- Diagnose → lower/disable via approved `SettingsWriter` within DEV bounds → audit + save originals in `RESTORE-dev-settings.md` → clear stale state → test → restore (also on failure).
+- Never touch production, code defaults, migrations or permanent config; if settings can't safely change, use deterministic mocks/fixtures.
+- LEAD owns blocker removal; agents never wait on their own.
+
 ## 1. Principles
 
 - Tests prove behaviour and protect against regressions; coverage is judged by risk (money, auth, tenancy, data loss), not by a percentage.
